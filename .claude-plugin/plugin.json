@@ -1,0 +1,11 @@
+{
+  "name": "cyhber-deploy",
+  "version": "1.0.0",
+  "description": "DevSecOps skill for security analysis across code, CI/CD, and infrastructure",
+  "author": {
+    "name": "DevCop95",
+    "email": "yared.henriquezb@gmail.com",
+    "url": "https://github.com/DevCop95"
+  },
+  "homepage": "https://github.com/DevCop95/cyhber-deploy"
+}

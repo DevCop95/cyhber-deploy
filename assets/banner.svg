@@ -1,0 +1,99 @@
+<svg width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#grad1)"/>
+
+  <!-- Circuit pattern -->
+  <g opacity="0.1" stroke="#5F6FFF" stroke-width="1" fill="none">
+    <line x1="0" y1="50" x2="200" y2="50"/>
+    <line x1="200" y1="50" x2="200" y2="150"/>
+    <circle cx="200" cy="150" r="5" fill="#5F6FFF"/>
+    <line x1="400" y1="100" x2="600" y2="100"/>
+    <circle cx="400" cy="100" r="5" fill="#5F6FFF"/>
+    <line x1="800" y1="200" x2="1000" y2="200"/>
+    <circle cx="1000" cy="200" r="5" fill="#5F6FFF"/>
+  </g>
+
+  <!-- Claude-style icon (simplified) -->
+  <g transform="translate(100, 80)">
+    <circle cx="0" cy="0" r="50" fill="#5F6FFF" opacity="0.2"/>
+    <path d="M -25,-15 L 0,-35 L 25,-15 L 25,15 L 0,35 L -25,15 Z"
+          fill="#5F6FFF" filter="url(#glow)"/>
+    <text x="0" y="10" font-family="Arial, sans-serif" font-size="40"
+          fill="#fff" text-anchor="middle" font-weight="bold">C</text>
+  </g>
+
+  <!-- Sherlock detective icon -->
+  <g transform="translate(950, 100)">
+    <!-- Magnifying glass -->
+    <circle cx="0" cy="0" r="35" fill="none" stroke="#FFB800" stroke-width="4" filter="url(#glow)"/>
+    <line x1="25" y1="25" x2="45" y2="45" stroke="#FFB800" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+
+    <!-- Detective hat (simplified) -->
+    <path d="M -15,-50 L -25,-35 L 25,-35 L 15,-50 Z" fill="#8B4513"/>
+    <ellipse cx="0" cy="-35" rx="30" ry="8" fill="#A0522D"/>
+
+    <!-- Shield badge -->
+    <g transform="translate(-60, 60)">
+      <path d="M 0,-15 L 8,-12 L 8,8 L 0,15 L -8,8 L -8,-12 Z" fill="#FFB800" opacity="0.8"/>
+      <text x="0" y="3" font-family="monospace" font-size="10" fill="#1a1a2e" text-anchor="middle" font-weight="bold">SEC</text>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="120" font-family="'Courier New', monospace" font-size="72"
+        fill="#fff" text-anchor="middle" font-weight="bold" filter="url(#glow)">
+    CYHBER DEPLOY
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="160" font-family="Arial, sans-serif" font-size="24"
+        fill="#a8a8a8" text-anchor="middle">
+    DevSecOps AI Assistant for Claude Code
+  </text>
+
+  <!-- Tags -->
+  <g transform="translate(300, 200)">
+    <rect x="0" y="0" width="120" height="35" rx="17.5" fill="#5F6FFF" opacity="0.3"/>
+    <text x="60" y="23" font-family="Arial, sans-serif" font-size="16"
+          fill="#5F6FFF" text-anchor="middle" font-weight="600">Security</text>
+  </g>
+
+  <g transform="translate(440, 200)">
+    <rect x="0" y="0" width="120" height="35" rx="17.5" fill="#FFB800" opacity="0.3"/>
+    <text x="60" y="23" font-family="Arial, sans-serif" font-size="16"
+          fill="#FFB800" text-anchor="middle" font-weight="600">CI/CD</text>
+  </g>
+
+  <g transform="translate(580, 200)">
+    <rect x="0" y="0" width="120" height="35" rx="17.5" fill="#00D9FF" opacity="0.3"/>
+    <text x="60" y="23" font-family="Arial, sans-serif" font-size="16"
+          fill="#00D9FF" text-anchor="middle" font-weight="600">IaC</text>
+  </g>
+
+  <g transform="translate(720, 200)">
+    <rect x="0" y="0" width="140" height="35" rx="17.5" fill="#FF6B6B" opacity="0.3"/>
+    <text x="60" y="23" font-family="Arial, sans-serif" font-size="16"
+          fill="#FF6B6B" text-anchor="middle" font-weight="600">Analysis</text>
+  </g>
+
+  <!-- Version badge -->
+  <g transform="translate(1050, 30)">
+    <rect x="0" y="0" width="100" height="25" rx="12.5" fill="#28a745"/>
+    <text x="50" y="17" font-family="Arial, sans-serif" font-size="14"
+          fill="#fff" text-anchor="middle" font-weight="600">v1.0.0</text>
+  </g>
+</svg>
