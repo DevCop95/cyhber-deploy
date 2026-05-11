@@ -4,292 +4,319 @@
 
 # 🔐 Cyhber Deploy
 
-> **DevSecOps AI Assistant** for Claude Code — Security analysis across code, CI/CD & infrastructure
+> **Systematic DevSecOps Analysis** for Claude Code — 5-layer security review with standardized severity-tagged alerts
 
-[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-5F6FFF?style=for-the-badge&logo=anthropic)](https://claude.ai/code)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-5F6FFF?style=for-the-badge&logo=anthropic)](https://claude.ai/code)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)](https://github.com/DevCop95/cyhber-deploy)
-[![Stars](https://img.shields.io/github/stars/DevCop95/cyhber-deploy?style=for-the-badge)](https://github.com/DevCop95/cyhber-deploy/stargazers)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue?style=for-the-badge)](https://github.com/DevCop95/cyhber-deploy)
+[![TDD](https://img.shields.io/badge/Built_with-TDD-green?style=for-the-badge)](tests/)
 
 [![Security](https://img.shields.io/badge/Security-Focused-red?style=flat-square)](https://owasp.org)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-Ready-orange?style=flat-square)](https://github.com/features/actions)
 [![IaC](https://img.shields.io/badge/IaC-Supported-blue?style=flat-square)](https://www.terraform.io/)
-[![SAST](https://img.shields.io/badge/SAST-Integrated-green?style=flat-square)](https://semgrep.dev/)
+[![Tested](https://img.shields.io/badge/Pressure_Tested-Passed-green?style=flat-square)](tests/FINAL-REPORT.md)
 
-[🚀 Quick Start](#-instalación) • [📖 Documentation](skills/cyhber-deploy/SKILL.md) • [💡 Examples](examples/) • [🐛 Report Bug](https://github.com/DevCop95/cyhber-deploy/issues)
+[🚀 Quick Start](#-installation) • [📖 Documentation](skills/cyhber-deploy/SKILL.md) • [🧪 Test Results](tests/FINAL-REPORT.md) • [🐛 Report Bug](https://github.com/DevCop95/cyhber-deploy/issues)
 
 </div>
 
 ---
 
-## 🚀 Características
+## ✨ What's New in v2.0
 
-Cyhber Deploy acompaña tu ciclo de desarrollo y despliegue con análisis de seguridad en 5 capas:
+**Complete rebuild with TDD methodology:**
+- ✅ Systematic 5-layer review enforced (no ad-hoc analysis)
+- ✅ Standardized severity-tagged alerts (CRITICO/ALTO/MEDIO/BAJO)
+- ✅ Proactive scope expansion beyond user request
+- ✅ Token-efficient (~450 words, 60% reduction)
+- ✅ Pressure-tested with time/authority/exhaustion scenarios
+- ✅ Full test documentation included
 
-1. **Código** — Validación de entradas, inyección SQL/XSS, autenticación
-2. **Dependencias** — Vulnerabilidades conocidas, licencias, versiones obsoletas
-3. **Secretos** — Detección de API keys, tokens, certificados expuestos
-4. **CI/CD** — Permisos en pipelines, flujo de despliegue, controles previos
-5. **Infraestructura** — Exposición de servicios, permisos IAM, cifrado
+**Results:** 6-8 categorized alerts vs 1-2 ad-hoc findings in baseline testing.
 
-### Alertas estructuradas
-
-Cada hallazgo incluye:
-- 🔴 Severidad (CRITICO/ALTO/MEDIO/BAJO)
-- 📍 Componente afectado
-- 🔍 Evidencia concreta
-- ✅ Remediación específica
+See [FINAL-REPORT.md](tests/FINAL-REPORT.md) for complete TDD documentation.
 
 ---
 
-## 📸 Preview
+## 🚀 Features
 
-<div align="center">
+### Systematic 5-Layer Analysis
 
-### 🔍 Security Analysis in Action
+Every security review follows this structured methodology:
+
+1. **Code Validation** — Input validation, injection (SQL/XSS/Command), auth/authz, error handling
+2. **Dependencies** — CVEs, outdated packages, unmaintained libraries, transitive dependencies
+3. **Secrets & PII** — Hardcoded API keys, tokens, certificates, exposed personal data
+4. **CI/CD Pipeline** — Branch restrictions, secret exposure, security gates, rollback plans
+5. **Infrastructure** — Network exposure, IAM/RBAC permissions, encryption, security groups
+
+**No layer skipped** — even "frontend-only" code triggers full review.
+
+### Standardized Alert Format
+
+Every finding includes:
+
+| Campo | Valor |
+|-------|-------|
+| **Severidad** | 🔴 CRITICO \| 🟠 ALTO \| 🟡 MEDIO \| 🟢 BAJO |
+| **ID** | CD-SEC-XXX (sequential) |
+| **Componente** | file.js:line or resource name |
+| **Descripción** | What + why it's a risk |
+| **Evidencia** | Code snippet or config excerpt |
+| **Remediación** | Specific fix steps |
+
+### Risk Assessment Output
 
 ```
 ┌─────────────────────────────────────────────┐
-│ 🔒 SECURITY ANALYSIS REPORT                 │
+│ 🔒 ESTADO DE SEGURIDAD                      │
 ├─────────────────────────────────────────────┤
-│ ❌ 2 CRITICAL  ⚠️  5 HIGH  ⚡ 3 MEDIUM     │
+│ Nivel de riesgo:  🔴 CRITICO                │
+│ Alertas totales:  8                         │
+│   • Críticas:     2                         │
+│   • Altas:        3                         │
+│   • Medias:       2                         │
+│   • Bajas:        1                         │
+├─────────────────────────────────────────────┤
+│ ⚠️  RECOMENDACIÓN:                          │
+│ BLOQUEAR despliegue hasta resolver          │
+│ hallazgos críticos y altos.                 │
 └─────────────────────────────────────────────┘
 ```
 
-**Example Output:**
+---
 
-| Severity | ID | Component | Issue |
-|----------|-----|-----------|-------|
-| 🔴 **CRITICAL** | CD-SEC-101 | `api/auth.js:45` | SQL Injection detected |
-| 🔴 **CRITICAL** | CD-SEC-102 | `server.js:12` | Hardcoded API key exposed |
-| 🟠 **HIGH** | CD-SEC-201 | `.github/workflows/deploy.yml` | Deploy from any branch |
-| 🟡 **MEDIUM** | CD-SEC-301 | `terraform/main.tf` | Security group too permissive |
+## 📦 Installation
 
-</div>
+### Claude Code CLI
+
+```bash
+# Install from local directory
+git clone https://github.com/DevCop95/cyhber-deploy.git
+cd cyhber-deploy
+cp -r skills/cyhber-deploy ~/.claude/skills/
+```
+
+### Verify Installation
+
+```bash
+# Check skill is loaded
+claude # Start Claude Code session
+# Skill auto-triggers on: deploy, CI/CD, Terraform, auth, secrets, injection
+```
 
 ---
 
-## 📦 Instalación
+## 🎯 Usage
 
-### Opción 1: Instalación directa desde GitHub
+### Auto-Trigger Keywords
 
-```bash
-claude plugins install github:DevCop95/cyhber-deploy
+Skill activates when you mention:
+- **Deploy:** staging, production, release
+- **CI/CD:** GitHub Actions, GitLab CI, Jenkins, CircleCI
+- **IaC:** Terraform, Kubernetes, Docker, Helm
+- **Cloud:** AWS, GCP, Azure
+- **Security:** auth, secrets, injection, SQL, XSS
+- **Review:** "security review", "check this code"
+
+### Manual Invocation
+
+```
+@cyhber-deploy review this for production
 ```
 
-### Opción 2: Instalación manual
+---
 
-1. Clona el repositorio:
-```bash
-git clone https://github.com/DevCop95/cyhber-deploy.git
-cd cyhber-deploy
-```
+## 📸 Examples
 
-2. Instala el plugin:
-```bash
-# Desde el directorio del plugin
-claude plugins install .
+### Example 1: SQL Injection Detection
 
-# O especifica la ruta
-claude plugins install /ruta/a/cyhber-deploy
-```
-
-3. Verifica la instalación:
-```bash
-claude plugins list
-```
-
-### Opción 3: Desarrollo local
-
-```bash
-# Clona y enlaza para desarrollo
-git clone https://github.com/DevCop95/cyhber-deploy.git
-cd cyhber-deploy
-claude plugins link .
-```
-
-## 🎯 Uso
-
-### Activar el skill
-
-```bash
-# En Claude Code
-/cyhber-deploy
-```
-
-O invoca manualmente:
-```
-@cyhber-deploy revisa este código para producción
-```
-
-### Ejemplos
-
-#### 1. Revisión de código
-
+**Input:**
 ```javascript
-// api/user.js
-app.post('/user', (req, res) => {
-  const sql = `SELECT * FROM users WHERE id = ${req.body.id}`;
-  db.query(sql, (err, result) => {
-    res.json(result);
-  });
+app.post('/login', (req, res) => {
+  db.query(`SELECT * FROM users WHERE email='${req.body.email}'`);
 });
 ```
 
-**Cyhber Deploy detecta:**
-- 🔴 **CRITICO**: SQL injection en línea 3
-- 🟠 **ALTO**: Sin validación de entrada
-- 🟡 **MEDIO**: Exposición de datos sensibles sin filtrar
+**Output:**
 
-#### 2. Revisión de CI/CD
+| Campo | Valor |
+|-------|-------|
+| **Severidad** | 🔴 CRITICO |
+| **ID** | CD-SEC-001 |
+| **Componente** | `api/auth.js:2` |
+| **Descripción** | SQL injection - user-controlled email concatenated into query |
+| **Evidencia** | `` db.query(`SELECT * FROM users WHERE email='${req.body.email}'`) `` |
+| **Remediación** | Use parameterized query: `db.query('SELECT * FROM users WHERE email = ?', [req.body.email])` |
 
+---
+
+### Example 2: CI/CD Secret Exposure
+
+**Input:**
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy
-on: [push]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Deploying to production..."
-          kubectl apply -f k8s/
+- run: |
+    echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+    cat .env
 ```
 
-**Cyhber Deploy detecta:**
-- 🟠 **ALTO**: Deploy se ejecuta en cualquier push (sin restricción de rama)
-- 🟡 **MEDIO**: Sin step de tests antes de deploy
-- 🟢 **BAJO**: Falta escaneo de secretos
+**Output:**
 
-#### 3. Revisión de infraestructura
+| Campo | Valor |
+|-------|-------|
+| **Severidad** | 🔴 CRITICO |
+| **ID** | CD-SEC-001 |
+| **Componente** | `.github/workflows/deploy.yml:3` |
+| **Descripción** | API key exposed in workflow logs via `cat .env` |
+| **Evidencia** | `cat .env` prints secrets to logs accessible to all repo users |
+| **Remediación** | Remove `cat .env`. Pass secrets via env vars: `env: API_KEY: ${{ secrets.API_KEY }}` |
 
+---
+
+### Example 3: Infrastructure Overexposure
+
+**Input:**
 ```hcl
-# terraform/main.tf
-resource "aws_security_group" "web" {
+resource "aws_security_group" "db" {
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 5432
+    to_port     = 5432
   }
 }
 ```
 
-**Cyhber Deploy detecta:**
-- 🔴 **CRITICO**: Security group permite todo el tráfico desde internet
-- 🟠 **ALTO**: Sin restricción de puertos
-- 🟡 **MEDIO**: Falta egress rules explícitas
+**Output:**
 
-## 📚 Ejemplos completos
+| Campo | Valor |
+|-------|-------|
+| **Severidad** | 🔴 CRITICO |
+| **ID** | CD-SEC-001 |
+| **Componente** | `terraform/main.tf:3` |
+| **Descripción** | Database exposed to entire internet via overly permissive security group |
+| **Evidencia** | `cidr_blocks = ["0.0.0.0/0"]` allows connections from any IP |
+| **Remediación** | Restrict to application subnet: `cidr_blocks = ["10.0.1.0/24"]` or use VPC peering |
 
-El directorio `examples/` contiene casos de uso reales:
+---
 
-- **`vulnerable-api/`** — API con vulnerabilidades comunes
-- **`secure-api/`** — Mismo API con correcciones aplicadas
+## 🧪 Testing & Quality
 
-```bash
-# Prueba con ejemplo vulnerable
-cd examples/vulnerable-api
-claude
+### TDD Methodology
 
-# Dentro de Claude Code
-/cyhber-deploy
-revisa este proyecto
-```
+Skill built following complete RED-GREEN-REFACTOR cycle:
 
-## 🛠 Configuración
+- **RED Phase:** Baseline testing without skill (3 pressure scenarios)
+- **GREEN Phase:** Skill enforcement verification (systematic 5-layer review)
+- **REFACTOR Phase:** Edge case testing (frontend-only code)
 
-### Personalizar severidades
+### Test Results
 
-Crea `.cyhber-deploy.json` en la raíz del proyecto:
+| Metric | Baseline (No Skill) | With Skill | Improvement |
+|--------|---------------------|------------|-------------|
+| **Issues found** | 1-2 | 6-8 | +300-400% |
+| **Structure** | Ad-hoc | 5-layer systematic | ✅ |
+| **Output format** | Freeform | Severity tables | ✅ |
+| **Scope** | Limited | Proactive expansion | ✅ |
 
-```json
-{
-  "severity": {
-    "sql_injection": "CRITICO",
-    "xss": "ALTO",
-    "hardcoded_secrets": "CRITICO",
-    "outdated_deps": "MEDIO"
-  },
-  "ignore": [
-    "examples/**",
-    "test/**"
-  ],
-  "frameworks": {
-    "detect": true,
-    "whitelist": ["express", "fastify", "koa"]
-  }
-}
-```
+**Full documentation:** [tests/FINAL-REPORT.md](tests/FINAL-REPORT.md)
 
-### Integrar con CI/CD
+---
 
-#### GitHub Actions
+## 📚 Documentation
 
-```yaml
-name: Security Scan
-on: [pull_request]
-jobs:
-  cyhber-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: anthropics/setup-claude@v1
-      - run: |
-          claude plugins install github:DevCop95/cyhber-deploy
-          claude /cyhber-deploy --ci-mode > security-report.md
-      - uses: actions/upload-artifact@v3
-        with:
-          name: security-report
-          path: security-report.md
-```
+- **[SKILL.md](skills/cyhber-deploy/SKILL.md)** — Complete skill specification
+- **[secret-patterns.md](skills/cyhber-deploy/secret-patterns.md)** — 40+ secret detection patterns
+- **[FINAL-REPORT.md](tests/FINAL-REPORT.md)** — TDD testing documentation
+- **[Examples](examples/)** — Vulnerable and secure code samples
 
-## 📖 Documentación
+---
 
-- [**SKILL.md**](skills/cyhber-deploy/SKILL.md) — Documentación completa del skill
-- [**Ejemplos**](examples/) — Casos de uso prácticos
-- [**Wiki**](https://github.com/DevCop95/cyhber-deploy/wiki) — Guías y tutoriales
+## 🛠 Configuration
 
-## 🤝 Contribuir
+### Secret Patterns
 
-Contribuciones bienvenidas! Revisa [CONTRIBUTING.md](CONTRIBUTING.md) para detalles.
+Built-in detection for:
+- AWS keys (AKIA...), Azure, GCP service accounts
+- GitHub tokens (ghp_, gho_, glpat-)
+- Private keys (RSA, EC, OpenSSH, PGP)
+- Database connection strings
+- JWT tokens
+- Slack/Discord webhooks
+- Payment provider keys (Stripe, PayPal, Square)
 
-### Reportar vulnerabilidades
+See [secret-patterns.md](skills/cyhber-deploy/secret-patterns.md) for complete list.
 
-Para reportar problemas de seguridad, envía email a: yared.henriquezb@gmail.com
+---
 
-**NO** abras issues públicos para vulnerabilidades.
+## 🤝 Contributing
+
+Contributions welcome! For major changes:
+
+1. Fork repo
+2. Create feature branch (`git checkout -b feature/improvement`)
+3. Follow TDD methodology (see [tests/](tests/) for examples)
+4. Commit with conventional commits
+5. Push and open PR
+
+### Reporting Security Issues
+
+**DO NOT** open public issues for vulnerabilities.
+
+Email: yared.henriquezb@gmail.com
+
+---
 
 ## 📋 Roadmap
 
-- [ ] Soporte para más frameworks (Django, Flask, Spring Boot)
-- [ ] Integración con SAST tools (Semgrep, CodeQL)
-- [ ] Dashboard web para reportes
-- [ ] Modo CI con output JSON/SARIF
-- [ ] Detección de configuraciones cloud (AWS, GCP, Azure)
-- [ ] Plugin para VS Code
+- [ ] SARIF output format for CI/CD integration
+- [ ] Custom rule configuration (.cyhber-deploy.json)
+- [ ] Multi-language support (Django, Flask, Spring Boot)
+- [ ] GitHub Action for automated PR reviews
+- [ ] VS Code extension
+- [ ] Dashboard for security metrics over time
 
-## 📄 Licencia
+---
 
-MIT License - ver [LICENSE](LICENSE) para detalles.
+## 📄 License
 
-## 🙏 Créditos
+MIT License - see [LICENSE](LICENSE)
 
-Desarrollado por [DevCop95](https://github.com/DevCop95)
+---
 
-Inspirado por herramientas como:
-- [Semgrep](https://semgrep.dev/)
-- [Snyk](https://snyk.io/)
-- [TruffleHog](https://github.com/trufflesecurity/trufflehog)
-- [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/)
+## 🙏 Credits
 
-## 📞 Soporte
+**Author:** [DevCop95](https://github.com/DevCop95)
+
+**Built with guidance from:**
+- [Claude Code Superpowers](https://github.com/codeium/claude-plugins-official/tree/main/superpowers) - TDD methodology for skills
+- [Anthropic Claude](https://www.anthropic.com/) - AI platform
+
+**Inspired by:**
+- [Semgrep](https://semgrep.dev/) - SAST scanning
+- [Snyk](https://snyk.io/) - Dependency analysis
+- [TruffleHog](https://github.com/trufflesecurity/trufflehog) - Secret detection
+- [OWASP](https://owasp.org/) - Security standards
+
+---
+
+## 📞 Support
 
 - 🐛 [Issues](https://github.com/DevCop95/cyhber-deploy/issues)
 - 💬 [Discussions](https://github.com/DevCop95/cyhber-deploy/discussions)
 - 📧 Email: yared.henriquezb@gmail.com
-- 🐦 Twitter/X: [@Devcop101](https://x.com/Devcop101)
+- 🐦 X/Twitter: [@Devcop101](https://x.com/Devcop101)
 
 ---
 
-**⚠️ Disclaimer:** Cyhber Deploy es una herramienta de análisis estático y no reemplaza auditorías de seguridad profesionales ni pruebas de penetración. Úsala como complemento a tus prácticas de seguridad existentes.
+<div align="center">
+
+**⚠️ Disclaimer**
+
+Cyhber Deploy provides static analysis and does not replace professional security audits or penetration testing. Use as complement to existing security practices.
+
+**Production-Ready • TDD-Tested • Open Source**
+
+⭐ Star this repo if it helps your security workflow!
+
+</div>
