@@ -288,7 +288,7 @@ Inspirado por herramientas como:
 - 🐛 [Issues](https://github.com/DevCop95/cyhber-deploy/issues)
 - 💬 [Discussions](https://github.com/DevCop95/cyhber-deploy/discussions)
 - 📧 Email: yared.henriquezb@gmail.com
-- 🐦 Twitter: [@DevCop95](https://twitter.com/DevCop95)
+- 🐦 Twitter/X: [@Devcop101](https://x.com/Devcop101)
 
 ---
 
