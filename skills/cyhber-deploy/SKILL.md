@@ -34,37 +34,16 @@ Systematic DevSecOps review methodology enforcing 5-layer analysis with standard
 
 **ALWAYS follow this order** - don't skip layers based on request scope:
 
-```dot
-digraph security_review {
-    rankdir=TB;
-    "User request" [shape=doublecircle];
-    "Gather context" [shape=box];
-    "Summarize scope" [shape=box];
-    "Layer 1: Code validation" [shape=box];
-    "Layer 2: Dependencies" [shape=box];
-    "Layer 3: Secrets & PII" [shape=box];
-    "Layer 4: CI/CD pipeline" [shape=box];
-    "Layer 5: Infrastructure" [shape=box];
-    "Generate alerts" [shape=box];
-    "Calculate risk level" [shape=box];
-    "Block deployment?" [shape=diamond];
-    "BLOCK - Fix criticals first" [shape=box, style=filled, fillcolor=red];
-    "APPROVE - With mitigations" [shape=box, style=filled, fillcolor=green];
-    
-    "User request" -> "Gather context";
-    "Gather context" -> "Summarize scope";
-    "Summarize scope" -> "Layer 1: Code validation";
-    "Layer 1: Code validation" -> "Layer 2: Dependencies";
-    "Layer 2: Dependencies" -> "Layer 3: Secrets & PII";
-    "Layer 3: Secrets & PII" -> "Layer 4: CI/CD pipeline";
-    "Layer 4: CI/CD pipeline" -> "Layer 5: Infrastructure";
-    "Layer 5: Infrastructure" -> "Generate alerts";
-    "Generate alerts" -> "Calculate risk level";
-    "Calculate risk level" -> "Block deployment?";
-    "Block deployment?" -> "BLOCK - Fix criticals first" [label="CRITICO/ALTO"];
-    "Block deployment?" -> "APPROVE - With mitigations" [label="MEDIO/BAJO"];
-}
-```
+1. **Gather context** — languages, app type, environments, deploy target
+2. **Summarize scope** — state what you are about to review
+3. **Layer 1: Code validation**
+4. **Layer 2: Dependencies**
+5. **Layer 3: Secrets & PII**
+6. **Layer 4: CI/CD pipeline**
+7. **Layer 5: Infrastructure**
+8. **Generate alerts** (severity-tagged tables)
+9. **Calculate risk level**
+10. **Decision** → any 🔴 CRITICO or unmitigated 🟠 ALTO = **BLOCK**; otherwise **APPROVE with mitigations**
 
 ## Context Gathering
 
@@ -110,10 +89,13 @@ db.query(`SELECT * FROM users WHERE id = ${req.body.id}`)
 // ❌ Command Injection  
 exec(`ping ${userInput}`)
 
-// ❌ NoSQL Injection
-db.find({ user: req.body.user })
+// ❌ NoSQL Injection - body can inject operators, e.g. { "user": { "$ne": null } }
+db.find({ user: req.body.user })   // bypasses auth if req.body.user is an object
 
-// ✅ Parameterized queries
+// ✅ Coerce/validate type before querying
+db.find({ user: String(req.body.user) })
+
+// ✅ Parameterized SQL queries
 db.query('SELECT * FROM users WHERE id = ?', [req.body.id])
 ```
 
@@ -311,10 +293,15 @@ After generating all alerts, provide:
 └─────────────────────────────────────────────┘
 ```
 
+**Optional terminal render:** emit the findings as JSON (schema in
+`tools/findings.example.json`) and pipe to `python tools/cyhber_report.py` to print
+colored alert cards + this panel. Exit code 1 = block, 0 = approve (CI-friendly).
+
 **Block deployment when:**
-- Any 🔴 CRITICO alerts
-- Multiple 🟠 ALTO alerts without mitigations
-- User insists on deploying despite risks (warn but document)
+- Any 🔴 CRITICO alert (1 or more), OR
+- 3 or more 🟠 ALTO alerts without documented mitigations
+- User insists on deploying despite risks → proceed only with explicit written
+  acknowledgement, and document the accepted risk
 
 ## Limitations
 

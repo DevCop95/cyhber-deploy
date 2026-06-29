@@ -1,0 +1,29 @@
+{
+  "target": "examples/vulnerable-api/server.js",
+  "alerts": [
+    {
+      "severity": "CRITICO",
+      "id": "CD-SEC-001",
+      "component": "server.js:21",
+      "description": "SQL injection - user email concatenated directly into query.",
+      "evidence": "SELECT * FROM users WHERE email = '${email}'",
+      "remediation": "Use parameterized query: db.query('... WHERE email = ?', [email])"
+    },
+    {
+      "severity": "ALTO",
+      "id": "CD-SEC-002",
+      "component": "server.js:51",
+      "description": "Reflected XSS - search term echoed into HTML without escaping.",
+      "evidence": "res.send(`<h1>Search results for: ${q}</h1>`)",
+      "remediation": "HTML-escape output or render via an autoescaping template engine."
+    },
+    {
+      "severity": "BAJO",
+      "id": "CD-SEC-003",
+      "component": "server.js:91",
+      "description": "Verbose error handler returns stack traces to clients.",
+      "evidence": "res.status(500).json({ stack: err.stack })",
+      "remediation": "Log stack server-side; return a generic message to the client."
+    }
+  ]
+}

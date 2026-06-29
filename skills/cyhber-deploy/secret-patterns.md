@@ -47,7 +47,8 @@ secret[s]?\s*[:=]\s*['"][a-zA-Z0-9]{20,}['"]
 token[s]?\s*[:=]\s*['"][a-zA-Z0-9]{20,}['"]
 
 # Generic Password (basic patterns)
-password\s*[:=]\s*['"][^'"\s]{8,}['"]
+# ⚠️ HIGH false-positive rate. Excludes obvious placeholders and env-var indirection.
+password\s*[:=]\s*['"](?!.*(example|changeme|placeholder|your[_-]?password|xxx|\$\{))[^'"\s]{8,}['"]
 ```
 
 ## Private Keys
@@ -108,7 +109,8 @@ sk_live_[0-9a-zA-Z]{24,}
 rk_live_[0-9a-zA-Z]{24,}
 
 # PayPal Client ID
-A[a-zA-Z0-9_-]{79}
+# ⚠️ VERY HIGH false-positive rate (matches most 80-char base64). Require a paypal context word nearby.
+(?i)paypal.{0,40}A[a-zA-Z0-9_-]{79}
 
 # Square Access Token
 sq0atp-[0-9a-zA-Z_-]{22}
@@ -131,6 +133,8 @@ ssh-(rsa|dss|ed25519|ecdsa) [A-Za-z0-9+/=]+
 -----BEGIN CERTIFICATE-----
 
 # PKCS12 / PFX (base64 encoded)
+# ⚠️ VERY HIGH false-positive rate (matches any base64 cert/key blob, including public certs).
+# Use only alongside a filename/context check (.p12, .pfx, "private"). Confirm before flagging CRITICO.
 MII[A-Za-z0-9+/]{20,}
 ```
 

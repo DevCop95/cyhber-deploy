@@ -32,9 +32,10 @@
 - ✅ Pressure-tested with time/authority/exhaustion scenarios
 - ✅ Full test documentation included
 
-**Results:** 6-8 categorized alerts vs 1-2 ad-hoc findings in baseline testing.
+**Observed in manual evaluation:** 6-8 categorized alerts vs 1-2 ad-hoc findings on the
+same test scenarios. These are qualitative comparisons, not automated benchmarks.
 
-See [FINAL-REPORT.md](tests/FINAL-REPORT.md) for complete TDD documentation.
+See [FINAL-REPORT.md](tests/FINAL-REPORT.md) for the full evaluation notes.
 
 ---
 
@@ -166,7 +167,7 @@ app.post('/login', (req, res) => {
 | Campo | Valor |
 |-------|-------|
 | **Severidad** | 🔴 CRITICO |
-| **ID** | CD-SEC-001 |
+| **ID** | CD-SEC-002 |
 | **Componente** | `.github/workflows/deploy.yml:3` |
 | **Descripción** | API key exposed in workflow logs via `cat .env` |
 | **Evidencia** | `cat .env` prints secrets to logs accessible to all repo users |
@@ -192,11 +193,53 @@ resource "aws_security_group" "db" {
 | Campo | Valor |
 |-------|-------|
 | **Severidad** | 🔴 CRITICO |
-| **ID** | CD-SEC-001 |
+| **ID** | CD-SEC-003 |
 | **Componente** | `terraform/main.tf:3` |
 | **Descripción** | Database exposed to entire internet via overly permissive security group |
 | **Evidencia** | `cidr_blocks = ["0.0.0.0/0"]` allows connections from any IP |
 | **Remediación** | Restrict to application subnet: `cidr_blocks = ["10.0.1.0/24"]` or use VPC peering |
+
+---
+
+## 🖥️ Terminal Report (visual layer)
+
+A zero-dependency Python renderer turns findings into colored alert cards plus a
+final **ESTADO DE SEGURIDAD** panel — a visual recap of the scan, right in your terminal.
+
+```bash
+# See it instantly with the bundled demo
+python tools/cyhber_report.py --demo
+
+# Render your own findings (see schema in tools/findings.example.json)
+python tools/cyhber_report.py findings.json
+
+# Pipe from another tool
+cat findings.json | python tools/cyhber_report.py
+```
+
+**Preview:**
+
+```
+  ┌───────────────────────────────────────────────────────┐
+  │ 🔒 ESTADO DE SEGURIDAD                                  │
+  │ Objetivo: examples/vulnerable-api/server.js            │
+  ├───────────────────────────────────────────────────────┤
+  │ Nivel de riesgo:  🔴 CRITICO                            │
+  │ Alertas totales:  8                                     │
+  │   • CRITICO  3                                          │
+  │   • ALTO     3                                          │
+  │   • MEDIO    1                                          │
+  │   • BAJO     1                                          │
+  ├───────────────────────────────────────────────────────┤
+  │ ⚠️  RECOMENDACIÓN:                                      │
+  │ BLOQUEAR despliegue — resolver críticos/altos           │
+  └───────────────────────────────────────────────────────┘
+```
+
+- Pure stdlib (no `pip install`), works on Windows / macOS / Linux.
+- Auto-detects color; honors `NO_COLOR` / `FORCE_COLOR`.
+- **Exit code `1`** when the run should block (any 🔴 or ≥3 🟠), `0` otherwise —
+  drop it straight into a CI gate.
 
 ---
 
@@ -212,12 +255,15 @@ Skill built following complete RED-GREEN-REFACTOR cycle:
 
 ### Test Results
 
-| Metric | Baseline (No Skill) | With Skill | Improvement |
-|--------|---------------------|------------|-------------|
-| **Issues found** | 1-2 | 6-8 | +300-400% |
-| **Structure** | Ad-hoc | 5-layer systematic | ✅ |
-| **Output format** | Freeform | Severity tables | ✅ |
-| **Scope** | Limited | Proactive expansion | ✅ |
+| Metric | Baseline (No Skill) | With Skill |
+|--------|---------------------|------------|
+| **Issues found** | 1-2 | 6-8 |
+| **Structure** | Ad-hoc | 5-layer systematic |
+| **Output format** | Freeform | Severity tables |
+| **Scope** | Limited | Proactive expansion |
+
+> Numbers come from manual evaluation on the bundled test scenarios, not from an
+> automated benchmark suite. Treat them as directional, not guaranteed.
 
 **Full documentation:** [tests/FINAL-REPORT.md](tests/FINAL-REPORT.md)
 
@@ -229,6 +275,7 @@ Skill built following complete RED-GREEN-REFACTOR cycle:
 - **[secret-patterns.md](skills/cyhber-deploy/secret-patterns.md)** — 40+ secret detection patterns
 - **[FINAL-REPORT.md](tests/FINAL-REPORT.md)** — TDD testing documentation
 - **[Examples](examples/)** — Vulnerable and secure code samples
+- **[tools/cyhber_report.py](tools/cyhber_report.py)** — Terminal report renderer (visual layer)
 
 ---
 
