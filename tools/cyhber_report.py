@@ -105,6 +105,21 @@ SEVERITY = {
 }
 SEVERITY_ORDER = ["CRITICO", "ALTO", "MEDIO", "BAJO"]
 
+# Accept English / common aliases so findings from other tools aren't silently
+# dropped (which would under-count and wrongly pass a CI gate).
+SEVERITY_ALIASES = {
+    "CRITICO": "CRITICO", "CRITICAL": "CRITICO", "CRIT": "CRITICO",
+    "ALTO": "ALTO", "HIGH": "ALTO",
+    "MEDIO": "MEDIO", "MEDIUM": "MEDIO", "MED": "MEDIO",
+    "BAJO": "BAJO", "LOW": "BAJO", "INFO": "BAJO", "INFORMATIONAL": "BAJO",
+}
+
+
+def norm_sev(raw):
+    """Map a severity string to a canonical level, or None if unrecognized."""
+    return SEVERITY_ALIASES.get(str(raw).strip().upper())
+
+
 WIDTH = 64
 
 
@@ -134,8 +149,8 @@ def banner():
 
 
 def render_alert(a):
-    sev = str(a.get("severity", "BAJO")).upper()
-    code, emoji, label = SEVERITY.get(sev, SEVERITY["BAJO"])
+    sev = norm_sev(a.get("severity", "BAJO")) or "BAJO"
+    code, emoji, label = SEVERITY[sev]
     bar = c(code, "▌")
 
     aid = a.get("id", "CD-SEC-???")
@@ -279,18 +294,31 @@ def main():
         print(__doc__)
         return 0
 
+    if not isinstance(data, dict):
+        print(c("38;5;196", "Error: findings root must be a JSON object with an "
+                            "'alerts' array."), file=sys.stderr)
+        return 2
+
     alerts = data.get("alerts", [])
+    if not isinstance(alerts, list):
+        print(c("38;5;196", "Error: 'alerts' must be a list."), file=sys.stderr)
+        return 2
+    alerts = [a for a in alerts if isinstance(a, dict)]
+
     counts = {s: 0 for s in SEVERITY_ORDER}
     for a in alerts:
-        sev = str(a.get("severity", "BAJO")).upper()
-        if sev in counts:
-            counts[sev] += 1
+        sev = norm_sev(a.get("severity", "BAJO"))
+        if sev is None:
+            print(c("38;5;220", f"Warning: unknown severity "
+                                f"{a.get('severity')!r} on {a.get('id', '?')} "
+                                f"— counting as BAJO."), file=sys.stderr)
+            sev = "BAJO"
+        counts[sev] += 1
 
     banner()
     # render highest severity first
     for a in sorted(alerts, key=lambda x: SEVERITY_ORDER.index(
-            str(x.get("severity", "BAJO")).upper())
-            if str(x.get("severity", "BAJO")).upper() in SEVERITY_ORDER else 99):
+            norm_sev(x.get("severity", "BAJO")) or "BAJO")):
         render_alert(a)
 
     return render_panel(counts, data.get("target"))

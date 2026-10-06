@@ -14,7 +14,7 @@
 [![Security](https://img.shields.io/badge/Security-Focused-red?style=flat-square)](https://owasp.org)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-Ready-orange?style=flat-square)](https://github.com/features/actions)
 [![IaC](https://img.shields.io/badge/IaC-Supported-blue?style=flat-square)](https://www.terraform.io/)
-[![Tested](https://img.shields.io/badge/Pressure_Tested-Passed-green?style=flat-square)](tests/FINAL-REPORT.md)
+[![Evaluated](https://img.shields.io/badge/Manually_Evaluated-notes-green?style=flat-square)](tests/FINAL-REPORT.md)
 
 [🚀 Quick Start](#-installation) • [📖 Documentation](skills/cyhber-deploy/SKILL.md) • [🧪 Test Results](tests/FINAL-REPORT.md) • [🐛 Report Bug](https://github.com/DevCop95/cyhber-deploy/issues)
 
@@ -28,9 +28,10 @@
 - ✅ Systematic 5-layer review enforced (no ad-hoc analysis)
 - ✅ Standardized severity-tagged alerts (CRITICO/ALTO/MEDIO/BAJO)
 - ✅ Proactive scope expansion beyond user request
-- ✅ Token-efficient (~450 words, 60% reduction)
-- ✅ Pressure-tested with time/authority/exhaustion scenarios
-- ✅ Full test documentation included
+- ✅ Reference material split into dedicated files (secret patterns, tests)
+- ✅ Dynamic verification layer (optional, localhost-only runtime probing)
+- ✅ Manually evaluated against time/authority/exhaustion scenarios
+- ✅ Full evaluation notes included
 
 **Observed in manual evaluation:** 6-8 categorized alerts vs 1-2 ad-hoc findings on the
 same test scenarios. These are qualitative comparisons, not automated benchmarks.
@@ -310,7 +311,7 @@ Skill built following complete RED-GREEN-REFACTOR cycle:
 ## 📚 Documentation
 
 - **[SKILL.md](skills/cyhber-deploy/SKILL.md)** — Complete skill specification
-- **[secret-patterns.md](skills/cyhber-deploy/secret-patterns.md)** — 40+ secret detection patterns
+- **[secret-patterns.md](skills/cyhber-deploy/secret-patterns.md)** — 35 secret detection patterns
 - **[FINAL-REPORT.md](tests/FINAL-REPORT.md)** — TDD testing documentation
 - **[Examples](examples/)** — Vulnerable and secure code samples
 - **[tools/cyhber_report.py](tools/cyhber_report.py)** — Terminal report renderer (visual layer)

@@ -1,150 +1,98 @@
-# Cyhber Deploy Demo
+# Cyhber Deploy — Demo
 
-## Security Analysis Output Example
+The terminal renderer (`tools/cyhber_report.py`) turns findings into colored alert
+cards plus a final `ESTADO DE SEGURIDAD` panel. Pure stdlib, no dependencies.
 
-```
-🔐 Cyhber Deploy v1.0.0 - Security Analysis Starting...
+## Run it
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```bash
+# Bundled demo (8 sample findings from examples/vulnerable-api)
+python tools/cyhber_report.py --demo
 
-📁 Scanning: examples/vulnerable-api/
-🔍 Files analyzed: 2
-⏱️  Time: 1.2s
+# Your own findings file (schema in tools/findings.example.json)
+python tools/cyhber_report.py findings.json
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🚨 SECURITY ALERTS
-
-┌──────────────────────────────────────────────────────────────────┐
-│ 🔴 CRITICAL - CD-SEC-101                                         │
-├──────────────────────────────────────────────────────────────────┤
-│ Component:   server.js:23                                        │
-│ Issue:       SQL Injection vulnerability                         │
-│ Evidence:    db.query(`SELECT * FROM users WHERE id=${id}`)     │
-│ Impact:      Attacker can extract/modify database contents       │
-│                                                                  │
-│ ✅ Fix:                                                          │
-│   Use prepared statements:                                       │
-│   db.query('SELECT * FROM users WHERE id = ?', [id])           │
-└──────────────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────────────┐
-│ 🔴 CRITICAL - CD-SEC-102                                         │
-├──────────────────────────────────────────────────────────────────┤
-│ Component:   server.js:12                                        │
-│ Issue:       Hardcoded database credentials                      │
-│ Evidence:    password: 'admin123'                                │
-│ Impact:      Credentials exposed in version control              │
-│                                                                  │
-│ ✅ Fix:                                                          │
-│   Move to environment variables:                                 │
-│   password: process.env.DB_PASSWORD                             │
-└──────────────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────────────┐
-│ 🟠 HIGH - CD-SEC-201                                             │
-├──────────────────────────────────────────────────────────────────┤
-│ Component:   server.js:34                                        │
-│ Issue:       Command injection vulnerability                     │
-│ Evidence:    exec(`ping -c 4 ${host}`)                          │
-│ Impact:      Arbitrary command execution possible                │
-│                                                                  │
-│ ✅ Fix:                                                          │
-│   Validate input against whitelist or use safe library          │
-└──────────────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────────────┐
-│ 🟠 HIGH - CD-SEC-202                                             │
-├──────────────────────────────────────────────────────────────────┤
-│ Component:   server.js:45                                        │
-│ Issue:       XSS vulnerability in search endpoint                │
-│ Evidence:    res.send(`<h1>Results: ${q}</h1>`)                 │
-│ Impact:      Client-side script injection possible               │
-│                                                                  │
-│ ✅ Fix:                                                          │
-│   Use validator.escape(q) or return JSON instead of HTML        │
-└──────────────────────────────────────────────────────────────────┘
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📊 SUMMARY
-
-┌─────────────────────────────────────────────┐
-│ 🔒 SECURITY STATUS                          │
-├─────────────────────────────────────────────┤
-│ Risk Level:       🔴 CRITICAL               │
-│ Total Alerts:     12                        │
-│   • Critical:     2                         │
-│   • High:         5                         │
-│   • Medium:       3                         │
-│   • Low:          2                         │
-├─────────────────────────────────────────────┤
-│ ⚠️  RECOMMENDATION                          │
-│                                             │
-│ 🚫 BLOCK deployment until:                 │
-│   • Fix all CRITICAL issues                 │
-│   • Address HIGH priority alerts            │
-│   • Review MEDIUM findings                  │
-└─────────────────────────────────────────────┘
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📚 Resources:
-  • OWASP Top 10: https://owasp.org/www-project-top-ten/
-  • CWE Database: https://cwe.mitre.org/
-  • Fix examples: examples/secure-api/
-
-🔧 Next steps:
-  1. Address CRITICAL alerts immediately
-  2. Review HIGH priority findings
-  3. Run /cyhber-deploy again after fixes
-  4. Integrate with CI/CD for continuous monitoring
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-✨ Analysis complete! Type /help for more options.
+# Pipe from the dynamic layer
+python tools/dynamic_probe.py --boot "node server.js" --cwd examples/vulnerable-api \
+  --port 3000 --route "/search:q" --allow-active --json | python tools/cyhber_report.py
 ```
 
-## CI/CD Integration Example
+## Sample output
+
+Alert cards (one per finding, highest severity first):
+
+```
+  ▌ 🔴 CRITICO  CD-SEC-001  server.js:9
+  ▌
+  ▌ Hardcoded database credentials in source.
+  ▌
+  ▌ Evidencia:
+  ▌   password: 'admin123'
+  ▌
+  ▌ Remediación:
+  ▌   Move to a secrets manager / env var with restricted access.
+
+  ▌ 🟠 ALTO     CD-SEC-004  server.js:51
+  ▌
+  ▌ Reflected XSS - query echoed into HTML unescaped.
+  ▌
+  ▌ Evidencia:
+  ▌   res.send(`<h1>Search results for: ${q}</h1>`)
+  ▌
+  ▌ Remediación:
+  ▌   HTML-escape output or use a templating engine with autoescaping.
+```
+
+Final verdict panel:
+
+```
+  ┌────────────────────────────────────────────────┐
+  │ ESTADO DE SEGURIDAD                            │
+  │ Objetivo: examples/vulnerable-api/server.js    │
+  ├────────────────────────────────────────────────┤
+  │ Nivel de riesgo:  CRITICO                      │
+  │ Alertas totales:  8                            │
+  │   - CRITICO  3                                 │
+  │   - ALTO     3                                 │
+  │   - MEDIO    1                                 │
+  │   - BAJO     1                                 │
+  ├────────────────────────────────────────────────┤
+  │ RECOMENDACIÓN:                                 │
+  │ BLOQUEAR despliegue — resolver críticos/altos  │
+  └────────────────────────────────────────────────┘
+```
+
+> In a real terminal, severity dots (🔴 🟠 🟡 🟢) are colored. The panel above is
+> shown without them so the borders line up in Markdown.
+
+## CI gate
+
+`cyhber_report.py` exits `1` when the run should block (any 🔴 CRITICO, or ≥3 🟠 ALTO)
+and `0` otherwise — so you can fail a pipeline directly on its exit code:
 
 ```yaml
-# .github/workflows/security-scan.yml
-name: Security Scan
+# .github/workflows/security-report.yml
+name: Security Report
 on: [pull_request]
 
 jobs:
-  cyhber-deploy:
+  cyhber-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: anthropics/setup-claude@v1
-      - name: Run Security Analysis
-        run: |
-          claude plugins install github:DevCop95/cyhber-deploy
-          claude /cyhber-deploy --ci-mode
-      - name: Upload Results
-        if: always()
-        uses: actions/upload-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          name: security-report
-          path: cyhber-deploy-report.md
+          python-version: "3.12"
+      # Produce findings.json with your SAST/own tooling, then render + gate:
+      - run: python tools/cyhber_report.py findings.json
 ```
 
 ## Usage in Claude Code
 
-```bash
-# Activate the skill
-/cyhber-deploy
+The skill auto-triggers on keywords (deploy, CI/CD, Terraform, auth, secrets,
+injection). See [SKILL.md](../skills/cyhber-deploy/SKILL.md).
 
-# Analyze current directory
-analyze this project for security issues
-
-# Review specific file
+```
 review api/auth.js for vulnerabilities
-
-# Check before deployment
-ready to deploy - run security check
-
-# Scan infrastructure
-check terraform configuration security
+ready to deploy - run a security check
 ```

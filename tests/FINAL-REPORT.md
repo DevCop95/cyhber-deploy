@@ -48,7 +48,7 @@
 
 | Metric | Baseline | With Skill | Improvement |
 |--------|----------|------------|-------------|
-| Issues found | 1-2 | 6-8 | 300-400% |
+| Issues found | ~1-2 | ~6-8 | more (directional) |
 | Structured approach | No | Yes (5-layer) | ✅ |
 | Standardized output | No | Yes (severity tables) | ✅ |
 | Scope expansion | Limited | Proactive | ✅ |
@@ -114,11 +114,11 @@ Enforce systematic DevSecOps review methodology with standardized outputs
    - Mitigation requirements listed
 
 ### Supporting Files
-- `secret-patterns.md`: Regex patterns for 40+ secret types (AWS, GCP, GitHub, Slack, etc.)
+- `secret-patterns.md`: 35 regex patterns for secret types (AWS, GCP, GitHub, Slack, etc.)
 
-### Token Efficiency
-- Main skill: ~450 words (target <500 for frequent loading)
-- Regex patterns: Separated to dedicated file
+### Structure
+- Main skill: ~1700 words (6-layer methodology + dynamic verification)
+- Regex patterns: Separated to a dedicated reference file
 - Multi-language examples: Minimized
 
 ---
@@ -189,22 +189,17 @@ Agent:
 - [x] Rationalization table complete
 - [x] Red flags list comprehensive
 - [x] Common mistakes documented
-- [x] Token efficiency optimized (<500 words main skill)
 - [x] Supporting files created (secret-patterns.md)
-- [x] Description follows CSO principles (triggers-only)
-- [x] Flowchart added for decision points
+- [x] Description follows trigger-only style
 - [x] All alerts use standardized format
 
 ### Installation
 
 ```bash
-# Skill location
-.claude/skills/cyhber-deploy/
+# Skill location (copy into your Claude Code skills dir)
+~/.claude/skills/cyhber-deploy/
 ├── SKILL.md              # Main skill
 └── secret-patterns.md    # Regex patterns
-
-# Skill already installed at:
-C:\Users\POWER\Desktop\vscode\prueba\.claude\skills\cyhber-deploy\
 ```
 
 ### Usage
@@ -230,11 +225,14 @@ Skill auto-triggers on keywords:
 
 ## Success Metrics
 
-### Objective Improvements
-- **Alert count:** 1-2 → 6-8 per review (+300-400%)
+### Observed Improvements (manual evaluation, directional)
+- **Alert count:** ~1-2 → ~6-8 per review on the test scenarios
 - **Coverage:** Ad-hoc → Systematic 5 layers
 - **Output format:** Freeform → Standardized tables
 - **Scope:** Limited → Proactively expanded
+
+> These are qualitative observations from manual runs on the bundled scenarios,
+> not an automated benchmark.
 
 ### Qualitative Improvements
 - **Consistency:** Every review follows same structure
@@ -261,9 +259,9 @@ Skill auto-triggers on keywords:
 
 ## Test Artifacts
 
-All test results preserved in:
+All test results preserved in this repo's `tests/` directory:
 ```
-.claude/skills/cyhber-deploy-tests/
+tests/
 ├── pressure-scenarios.md    # 4 pressure scenarios (time, authority, exhaustion, fatigue)
 ├── baseline-results.md      # RED phase: agent behavior without skill
 ├── green-results.md         # GREEN phase: skill enforcement verification
