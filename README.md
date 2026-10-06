@@ -70,16 +70,16 @@ Every finding includes:
 
 ```
 ┌─────────────────────────────────────────────┐
-│ 🔒 ESTADO DE SEGURIDAD                      │
+│ ESTADO DE SEGURIDAD                         │
 ├─────────────────────────────────────────────┤
-│ Nivel de riesgo:  🔴 CRITICO                │
+│ Nivel de riesgo:  CRITICO                   │
 │ Alertas totales:  8                         │
-│   • Críticas:     2                         │
-│   • Altas:        3                         │
-│   • Medias:       2                         │
-│   • Bajas:        1                         │
+│   - Críticas:     2                         │
+│   - Altas:        3                         │
+│   - Medias:       2                         │
+│   - Bajas:        1                         │
 ├─────────────────────────────────────────────┤
-│ ⚠️  RECOMENDACIÓN:                          │
+│ RECOMENDACIÓN:                              │
 │ BLOQUEAR despliegue hasta resolver          │
 │ hallazgos críticos y altos.                 │
 └─────────────────────────────────────────────┘
@@ -220,20 +220,20 @@ cat findings.json | python tools/cyhber_report.py
 **Preview:**
 
 ```
-  ┌───────────────────────────────────────────────────────┐
-  │ 🔒 ESTADO DE SEGURIDAD                                  │
-  │ Objetivo: examples/vulnerable-api/server.js            │
-  ├───────────────────────────────────────────────────────┤
-  │ Nivel de riesgo:  🔴 CRITICO                            │
-  │ Alertas totales:  8                                     │
-  │   • CRITICO  3                                          │
-  │   • ALTO     3                                          │
-  │   • MEDIO    1                                          │
-  │   • BAJO     1                                          │
-  ├───────────────────────────────────────────────────────┤
-  │ ⚠️  RECOMENDACIÓN:                                      │
-  │ BLOQUEAR despliegue — resolver críticos/altos           │
-  └───────────────────────────────────────────────────────┘
+  ┌────────────────────────────────────────────────┐
+  │ ESTADO DE SEGURIDAD                            │
+  │ Objetivo: examples/vulnerable-api/server.js    │
+  ├────────────────────────────────────────────────┤
+  │ Nivel de riesgo:  CRITICO                      │
+  │ Alertas totales:  8                            │
+  │   - CRITICO  3                                 │
+  │   - ALTO     3                                 │
+  │   - MEDIO    1                                 │
+  │   - BAJO     1                                 │
+  ├────────────────────────────────────────────────┤
+  │ RECOMENDACIÓN:                                 │
+  │ BLOQUEAR despliegue — resolver críticos/altos  │
+  └────────────────────────────────────────────────┘
 ```
 
 - Pure stdlib (no `pip install`), works on Windows / macOS / Linux.
