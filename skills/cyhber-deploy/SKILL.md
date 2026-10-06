@@ -41,9 +41,10 @@ Systematic DevSecOps review methodology enforcing 5-layer analysis with standard
 5. **Layer 3: Secrets & PII**
 6. **Layer 4: CI/CD pipeline**
 7. **Layer 5: Infrastructure**
-8. **Generate alerts** (severity-tagged tables)
-9. **Calculate risk level**
-10. **Decision** → any 🔴 CRITICO or unmitigated 🟠 ALTO = **BLOCK**; otherwise **APPROVE with mitigations**
+8. **Layer 6: Dynamic verification** (optional, localhost-only — see below)
+9. **Generate alerts** (severity-tagged tables)
+10. **Calculate risk level**
+11. **Decision** → any 🔴 CRITICO or unmitigated 🟠 ALTO = **BLOCK**; otherwise **APPROVE with mitigations**
 
 ## Context Gathering
 
@@ -231,6 +232,46 @@ ingress {
 - [ ] HSTS enabled
 - [ ] Encryption at rest for sensitive data
 - [ ] VPN/tunnels for admin access
+
+## Layer 6: Dynamic Verification (optional, localhost-only)
+
+Static review (Layers 1-5) finds *suspected* issues. This layer **confirms them at
+runtime** by spinning up a throwaway instance of the project and probing it, so the
+verdict distinguishes "possible" from "proven-live". Follows OWASP DAST guidance for
+ephemeral environments: active checks run only against an isolated instance you own,
+scope-restricted, time-boxed, non-destructive by default.
+
+> 🔒 **Authorization boundary — not negotiable.**
+> Dynamic probing runs **only against a loopback instance** (127.0.0.1 / localhost)
+> that this run just started and will tear down. The tool (`tools/dynamic_probe.py`)
+> **refuses any non-loopback target** — it cannot be pointed at a staging server, a
+> LAN host, or anyone else's system. Never use it against infrastructure you do not
+> own and have not isolated. This is for testing your own code before you ship it.
+
+**When to run it:** the project is a runnable web service/API and the user wants
+runtime confirmation before the verdict. Skip it for libraries, static sites, or when
+no ephemeral instance can be safely started.
+
+**Flow:**
+1. Boot an ephemeral instance on localhost (dedicated throwaway DB/config, no prod
+   secrets, no shared data).
+2. Run the bounded probe set (passive by default; `--allow-active` adds the
+   mildly-active, still non-destructive checks like the SQLi single-quote error probe).
+3. Merge confirmed findings (tagged `source: dynamic`, `verified: true`) into the
+   alert list, then produce the verdict.
+4. Tear the instance down.
+
+```bash
+# Boot the app, probe it, pipe straight into the verdict panel:
+python tools/dynamic_probe.py --boot "node server.js" --cwd . --port 3000 \
+  --route "/search:q" --route "/login:email" --allow-active --json \
+  | python tools/cyhber_report.py
+```
+
+**Guardrails baked in:** loopback-only target; GET-based, non-destructive probes
+(no DELETE/DROP); per-request timeout + global time budget (don't DoS your own box);
+mutating/active probes are opt-in. A runtime-confirmed finding outranks the same
+issue found statically — mark it `verified: true` and keep its severity.
 
 ## Proactive Scope Expansion
 

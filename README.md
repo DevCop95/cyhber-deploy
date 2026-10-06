@@ -243,6 +243,44 @@ cat findings.json | python tools/cyhber_report.py
 
 ---
 
+## 🧪 Dynamic Verification (Layer 6)
+
+Static review finds *suspected* issues; this optional layer **confirms them at runtime**.
+Before emitting the verdict, Cyhber Deploy can spin up a **throwaway, localhost-only**
+instance of the project and probe it, so the final report separates "possible" from
+"proven-live".
+
+```bash
+# Boot the app on localhost, probe it, tear it down, and render the verdict:
+python tools/dynamic_probe.py --boot "node server.js" --cwd examples/vulnerable-api \
+  --port 3000 --route "/search:q" --route "/login:email" --allow-active --json \
+  | python tools/cyhber_report.py
+```
+
+> 🔒 **Authorization boundary.** `dynamic_probe.py` **refuses any non-loopback target**
+> (it only ever hits 127.0.0.1 / localhost). It is for testing a local, ephemeral
+> instance you own — never a staging box, a LAN host, or anyone else's system.
+
+**What it does, safely:**
+- **Loopback-only** hard gate — can't be pointed at a third party.
+- **Non-destructive by default** — GET-based probes; no DELETE/DROP. Mildly-active
+  checks (e.g. SQLi single-quote error) are opt-in via `--allow-active`.
+- **Time-boxed** — per-request timeout + global budget so you don't DoS your own box.
+- Confirmed findings are tagged `verified: true` and flow into the same verdict panel.
+
+Built following OWASP DAST guidance for ephemeral environments: active testing runs
+only against isolated, throwaway instances, scope-restricted and time-boxed.
+
+> For a full-featured scanner, point [OWASP ZAP](https://www.zaproxy.org/)'s baseline
+> scan at the same local instance — this layer is a zero-dependency smoke test, not a
+> ZAP replacement.
+
+**References:**
+- [OWASP DevSecOps Guideline — Dynamic Application Security Testing](https://github.com/OWASP/DevSecOpsGuideline/blob/master/current-version/2-Process/2-4-Test/2-4-2-Dynamic-Application-Security-Testing.md)
+- [OWASP ZAP](https://www.zaproxy.org/) — baseline/full/API scans & automation framework
+
+---
+
 ## 🧪 Testing & Quality
 
 ### TDD Methodology
@@ -276,6 +314,7 @@ Skill built following complete RED-GREEN-REFACTOR cycle:
 - **[FINAL-REPORT.md](tests/FINAL-REPORT.md)** — TDD testing documentation
 - **[Examples](examples/)** — Vulnerable and secure code samples
 - **[tools/cyhber_report.py](tools/cyhber_report.py)** — Terminal report renderer (visual layer)
+- **[tools/dynamic_probe.py](tools/dynamic_probe.py)** — Dynamic verification (Layer 6, localhost-only)
 
 ---
 
@@ -316,6 +355,7 @@ Email: yared.henriquezb@gmail.com
 
 ## 📋 Roadmap
 
+- [x] Dynamic verification layer (localhost-only runtime probing)
 - [ ] SARIF output format for CI/CD integration
 - [ ] Custom rule configuration (.cyhber-deploy.json)
 - [ ] Multi-language support (Django, Flask, Spring Boot)
