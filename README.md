@@ -1,6 +1,6 @@
 <div align="center">
 
-![Cyhber Deploy Banner](assets/banner1.svg)
+![Cyhber Deploy Banner](assets/banner1.jpg)
 
 # 🔐 Cyhber Deploy
 
